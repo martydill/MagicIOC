@@ -12,6 +12,12 @@ namespace MagicIOC.Tests
         }
 
         [Test]
+        public void TestCreateInterfaceWithNoSatisfiableDependenciesThrowsException()
+        {
+            Assert.Throws<ArgumentException>(() => MagicIOC.Get<IUnresolvable>());
+        }
+
+        [Test]
         public void TestCreateInterfaceWithImplementationReturnsImplementation()
         {
             var impl = MagicIOC.Get<IImplemented>();
@@ -72,5 +78,17 @@ namespace MagicIOC.Tests
             {
             }
         }
+
+        interface IUnresolvable
+        {
+        }
+
+        class Unresolvable : IUnresolvable
+        {
+            public Unresolvable(INotImplemented notImplemented)
+            {
+            }
+        }
     }
 }
+

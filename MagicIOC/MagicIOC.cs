@@ -6,6 +6,22 @@ using System.Linq;
 namespace MagicIOC
 {
     /// <summary>
+    /// Enum indicating whether to return a cached object, or create a new object
+    /// </summary>
+    public enum CachePolicy
+    {
+        /// <summary>
+        /// A single object shared by the entire system will be returned by this call
+        /// </summary>
+        Cached,
+
+        /// <summary>
+        /// A new object will be created for this call
+        /// </summary>
+        New
+    }
+
+    /// <summary>
     /// The MagicIOC container class
     /// </summary>
     public static class MagicIOC
@@ -20,7 +36,18 @@ namespace MagicIOC
         /// <returns>An instance of T</returns>
         public static T Get<T>() where T : class
         {
-            return Get(typeof(T)) as T;
+            return Get<T>(CachePolicy.Cached);
+        }
+
+        /// <summary>
+        /// Creates and returns an instance of the given type, if its dependencies can be satisfied.
+        /// </summary>
+        /// <param name="cachePolicy">What sort of caching to do with the object</param>
+        /// <typeparam name="T">The type of object to create</typeparam>
+        /// <returns>An instance of T</returns>
+        public static T Get<T>(CachePolicy cachePolicy) where T : class
+        {
+            return Get(typeof(T), cachePolicy) as T;
         }
 
         /// <summary>
@@ -28,7 +55,7 @@ namespace MagicIOC
         /// </summary>
         /// <param name="type">The type of object to create</typeparam>
         /// <returns>An instance of T</returns>
-        private static object Get(Type type)
+        private static object Get(Type type, CachePolicy cachePolicy)
         {
             object instance = null;
 
@@ -82,7 +109,7 @@ namespace MagicIOC
                 {
                     if (type != assemblyType && type.IsAssignableFrom(assemblyType))
                     {
-                        object implementationofInterface = Get(assemblyType);
+                        object implementationofInterface = Get(assemblyType, CachePolicy.Cached);
                         if (implementationofInterface != null)
                         {
                             instance = implementationofInterface;
@@ -132,7 +159,7 @@ namespace MagicIOC
             // Loop through each parameter and see if we can resolve it
             foreach (var parameter in parameters)
             {
-                object instanceOfParameter = Get(parameter.ParameterType);
+                object instanceOfParameter = Get(parameter.ParameterType, CachePolicy.Cached);
                 if (instanceOfParameter == null)
                     break;
 
