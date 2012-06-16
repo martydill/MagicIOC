@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections.Concurrent;
 
 namespace MagicIOC
 {
     /// <summary>
-    /// 
+    /// The MagicIOC container class
     /// </summary>
     public static class MagicIOC
     {
@@ -24,6 +23,11 @@ namespace MagicIOC
             return Get(typeof(T)) as T;
         }
 
+        /// <summary>
+        /// Creates and returns an instance of the given type, if its dependencies can be satisfied.
+        /// </summary>
+        /// <param name="type">The type of object to create</typeparam>
+        /// <returns>An instance of T</returns>
         private static object Get(Type type)
         {
             object instance = null;
@@ -63,6 +67,11 @@ namespace MagicIOC
             return instance;
         }
 
+        /// <summary>
+        /// Attempts to find and return an implementation for the specified interface
+        /// </summary>
+        /// <param name="type">The type of the interface we are looking for</param>
+        /// <returns>An implementation of the interface, or null if one couldn't be found</returns>
         private static object FindImplementationOfInterface(Type type)
         {
             object instance = null;
@@ -73,10 +82,10 @@ namespace MagicIOC
                 {
                     if (type != assemblyType && type.IsAssignableFrom(assemblyType))
                     {
-                        object p = Get(assemblyType);
-                        if (p != null)
+                        object implementationofInterface = Get(assemblyType);
+                        if (implementationofInterface != null)
                         {
-                            instance = p;
+                            instance = implementationofInterface;
                             break;
                         }
                     }
@@ -123,11 +132,11 @@ namespace MagicIOC
             // Loop through each parameter and see if we can resolve it
             foreach (var parameter in parameters)
             {
-                object p = Get(parameter.ParameterType);
-                if (p == null)
+                object instanceOfParameter = Get(parameter.ParameterType);
+                if (instanceOfParameter == null)
                     break;
 
-                parameterValues.Add(p);
+                parameterValues.Add(instanceOfParameter);
             }
 
             // If we were able to resolve each parameter, create the instance
