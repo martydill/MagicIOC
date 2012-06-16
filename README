@@ -1,0 +1,50 @@
+MagicIOC is a simple, zero-configuration IOC container for .NET.
+---------------------------------------------------------------
+
+It is based on the concept that interfaces are often created for the purposes of testability and loose coupling, as opposed to the ability to have multiple implementations. By using this assumption, MagicIOC allows for interface and class resolving with no configuration at all.
+
+Here are a few examples of its usage. Note the lack of setup/configuration!
+
+Resolving a class:
+var myClass = MagicIOC.Get<MyClass>();
+
+Resolving an interface:
+var myInterfaceImpl = MagicIOC.Get<IMyInterface>();
+
+
+That's all there is to it!
+Now consider a more complicated class hierarchy:
+
+public interface ICustomerRepository
+{
+
+}
+
+public class CustomerRepository : ICustomerRepository
+{
+}
+
+public interface IOrderRepository
+{
+}
+
+public class OrderRepository : IOrderRepository
+{
+}
+
+public interface IOrderProcessor
+{
+}
+
+public class OrderProcessor : IOrderProcessor
+{
+    public OrderProcessor(ICustomerRepository customerRepository, IOrderRepository orderRepository)
+    {
+    }
+}
+
+
+var orderProcessor = MagicIOC.Get<IOrderProcessor>();
+
+MagicIOC automatically finds the OrderProcessor implementation of the IOrderProcessor interface. It then discovers the ICustomerRepository and IOrderRepository dependencies, creates their implementations, and passes them to the OrderProcessor constructor.
+
