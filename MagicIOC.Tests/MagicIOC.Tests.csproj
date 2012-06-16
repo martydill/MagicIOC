@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcreteClassTests.cs" />
+    <Compile Include="CachePolicyTests.cs" />
     <Compile Include="InterfaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
