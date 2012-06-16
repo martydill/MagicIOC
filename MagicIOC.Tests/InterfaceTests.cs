@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace MagicIOC.Tests
@@ -30,6 +27,13 @@ namespace MagicIOC.Tests
             Assert.That(impl, Is.SameAs(impl2));
         }
 
+        [Test]
+        public void TestCreateInterfaceDependentOnOtherInterfacesReturnsImplementation()
+        {
+            var foo = MagicIOC.Get<IFoo>();
+            Assert.That(foo, Is.InstanceOf<Foo>());
+        }
+
         interface INotImplemented
         {
         }
@@ -40,6 +44,33 @@ namespace MagicIOC.Tests
 
         class Implemented : IImplemented
         {
+        }
+
+        interface IBar
+        {
+        }
+
+        class Bar : IBar
+        {
+        }
+
+        interface IBaz
+        {
+        }
+
+        class Baz : IBaz
+        {
+        }
+
+        interface IFoo
+        {
+        }
+
+        class Foo : IFoo
+        {
+            public Foo(IBar bar, IBaz baz)
+            {
+            }
         }
     }
 }

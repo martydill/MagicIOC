@@ -56,6 +56,12 @@ namespace MagicIOC.Tests
             Assert.Throws<ArgumentException>(() => MagicIOC.Get<DependsOnInterface>());
         }
 
+        [Test]
+        public void TestCreateAbstractClassThrowsException()
+        {
+            Assert.Throws<ArgumentException>(() => MagicIOC.Get<Abstract>());
+        }
+
         public class Bar
         {
         }
@@ -86,6 +92,10 @@ namespace MagicIOC.Tests
             public DependsOnInterface(INotImplemented notImplemented)
             {
             }
+        }
+
+        abstract class Abstract
+        {
         }
     }
 }
