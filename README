@@ -12,12 +12,17 @@ Resolving an interface:
 var myInterfaceImpl = MagicIOC.Get<IMyInterface>();
 
 
+Creating new objects instead of always returning cached ones:
+var impl1 = MagicIOC.Get<IMyInterface>(CachePolicy.New);
+var impl2 = MagicIOC.Get<IMyInterface>(CachePolicy.New);
+// impl1 != impl2
+
+
 That's all there is to it!
 Now consider a more complicated class hierarchy:
 
 public interface ICustomerRepository
 {
-
 }
 
 public class CustomerRepository : ICustomerRepository

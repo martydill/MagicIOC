@@ -59,7 +59,7 @@ namespace MagicIOC
         {
             object instance = null;
 
-            if (!_instanceCache.TryGetValue(type, out instance))
+            if (cachePolicy == CachePolicy.New || !_instanceCache.TryGetValue(type, out instance))
             {
                 if (type.IsClass)
                 {
@@ -87,7 +87,7 @@ namespace MagicIOC
                 }
 
                 // If creation was successful, add it to our cache
-                if (instance != null)
+                if (instance != null && cachePolicy == CachePolicy.Cached)
                     _instanceCache.TryAdd(type, instance);
             }
 
